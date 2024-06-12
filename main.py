@@ -1,3 +1,4 @@
+import mysql.connector
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -5,6 +6,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+
+
+
 
 PATH = r"C:\webdrivers\chromedriver.exe"
 service = Service(PATH)
@@ -23,7 +27,6 @@ def scroll_and_print_comments(drivers):
         drivers.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
         time.sleep(2)
 
-
         comment_elements = drivers.find_elements(By.CSS_SELECTOR, 'yt-attributed-string#content-text')
         for element in comment_elements:
             comment_text = element.text
@@ -38,6 +41,5 @@ def scroll_and_print_comments(drivers):
 
 
 scroll_and_print_comments(driver)
-
 
 driver.quit()
