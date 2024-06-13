@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-
+from embeding import get_bert_embeddings
 
 try:
     conn = mysql.connector.connect(
@@ -19,7 +19,7 @@ try:
     )
     if conn.is_connected():
         print('Connected to MySQL database')
-        cursor=conn.cursor()
+        cursor = conn.cursor()
 
 
 except Error as e:
@@ -48,9 +48,9 @@ def scroll_and_print_comments(drivers):
             if comment_text not in loaded_comments:
                 # print(comment_text)
                 loaded_comments.add(comment_text)
-
+                embedding = get_bert_embeddings(comment_text)
                 try:
-                    cursor.execute("INSERT INTO ytcomments (comment) VALUES (%s)", (comment_text,))
+                    cursor.execute("INSERT INTO ytcomments (comment, embedding) VALUES (%s, %s)",(comment_text, embedding))
                     conn.commit()
                 except Error as e:
                     print(f"Error inserting comment into MySQL database: {e}")
