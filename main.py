@@ -9,6 +9,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 from embeding import get_bert_embeddings
+import json
+import torch
+import numpy as np
 
 try:
     conn = mysql.connector.connect(
@@ -49,8 +52,10 @@ def scroll_and_print_comments(drivers):
                 # print(comment_text)
                 loaded_comments.add(comment_text)
                 embedding = get_bert_embeddings(comment_text)
+                embedding_json=json.dumps(embedding)
                 try:
-                    cursor.execute("INSERT INTO ytcomments (comment, embedding) VALUES (%s, %s)",(comment_text, embedding))
+                    cursor.execute("INSERT INTO ytcomments (comment, embedding) VALUES (%s, %s)",
+                                   (comment_text, embedding))
                     conn.commit()
                 except Error as e:
                     print(f"Error inserting comment into MySQL database: {e}")
@@ -60,7 +65,5 @@ def scroll_and_print_comments(drivers):
             break
         last_height = new_height
 
-
-scroll_and_print_comments(driver)
 
 driver.quit()
